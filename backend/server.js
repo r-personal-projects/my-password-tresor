@@ -3,7 +3,7 @@ const express = require('express');
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const Data = require('./data');
+const DataSchemas = require('./data');
 
 const API_PORT = 3001;
 const app = express();
@@ -33,7 +33,7 @@ app.use(logger('dev'));
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  Data.find((err, data) => {
+  DataSchemas.PasswordData.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
@@ -43,7 +43,7 @@ router.get('/getData', (req, res) => {
 // this method overwrites existing data in our database
 router.post('/updateData', (req, res) => {
   const { id, update } = req.body;
-  Data.findByIdAndUpdate(id, update, (err) => {
+  DataSchemas.PasswordData.findByIdAndUpdate(id, update, (err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
@@ -53,7 +53,7 @@ router.post('/updateData', (req, res) => {
 // this method removes existing data in our database
 router.delete('/deleteData', (req, res) => {
   const { id } = req.body;
-  Data.findByIdAndRemove(id, (err) => {
+  DataSchemas.PasswordData.findByIdAndRemove(id, (err) => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
@@ -62,7 +62,7 @@ router.delete('/deleteData', (req, res) => {
 // this is our create methid
 // this method adds new data in our database
 router.post('/putData', (req, res) => {
-  let data = new Data();
+  let data = new DataSchemas.PasswordData();
 
   const { id, message } = req.body;
 
@@ -72,7 +72,7 @@ router.post('/putData', (req, res) => {
       error: 'INVALID INPUTS',
     });
   }
-  data.message = message;
+  data.password = message;
   data.id = id;
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
